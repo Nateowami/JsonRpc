@@ -175,8 +175,8 @@ namespace EdjCase.JsonRpc.Router.Tests
 			RpcParameterType[] parameters = Array.Empty<RpcParameterType>();
 			string methodName = nameof(MethodMatcherController.IsLunchTime);
 			// Use lowercase version of method name when making request.
-			methodName = methodName.ToLowerInvariant();
-			var requestSignature = RpcRequestSignature.Create(methodName, parameters);
+			string methodNameLower = methodName.ToLowerInvariant();
+			var requestSignature = RpcRequestSignature.Create(methodNameLower, parameters);
 			var previousCulture = System.Globalization.CultureInfo.CurrentCulture;
 			// Switch to a culture that would result in lowercasing 'I' to
 			// U+0131, if not done with invariant culture.
@@ -184,8 +184,7 @@ namespace EdjCase.JsonRpc.Router.Tests
 			RpcMethodInfo methodInfo = matcher.GetMatchingMethod(requestSignature);
 
 			Assert.NotNull(methodInfo);
-			MethodInfo expectedMethodInfo = typeof(MethodMatcherController)
-				.GetMethod(nameof(MethodMatcherController.IsLunchTime))!;
+			MethodInfo expectedMethodInfo = typeof(MethodMatcherController).GetMethod(methodName)!;
 			Assert.Equal(expectedMethodInfo, methodInfo.MethodInfo);
 			System.Globalization.CultureInfo.CurrentCulture = previousCulture;
 		}
